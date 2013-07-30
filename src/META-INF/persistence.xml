@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.0" xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
+    <persistence-unit name="stachys" transaction-type="RESOURCE_LOCAL">
+        <properties>
+            <!--     <property name="javax.persistence.jdbc.driver" value="org.postgis.DriverWrapper" />
+            <property name="javax.persistence.jdbc.url"  value="jdbc:postgresql_postGIS://localhost:5433/pflanzenorg" />-->
+            <!--  <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>-->
+            <property name="hibernate.dialect" value="org.hibernatespatial.postgis.PostgisDialect"/>
+  
+            <property name="hibernate.connection.username" value="postgres"/>
+            <property name="hibernate.connection.password" value="post"/>
+            <property name="hibernate.connection.url" value="jdbc:postgresql_postGIS://localhost:5433/pflanzenorg"/>
+            <property name="hibernate.connection.driver_class" value="org.postgis.DriverWrapper"/>
+            <!--   <property name="hibernate.connection.url" value="jdbc:postgresql://localhost:5433/pflanzenorg"/>
+            <property name="hibernate.connection.driver_class" value="org.postgresql.Driver"/>-->
+        </properties>
+  
+    </persistence-unit>
+    <persistence-unit name="stachysnew" transaction-type="RESOURCE_LOCAL">
+        <properties>
+            <!--
+     <property name="javax.persistence.jdbc.driver" value="org.postgis.DriverWrapper" />
+            <property name="javax.persistence.jdbc.url"  value="jdbc:postgresql_postGIS://localhost:5433/pflanzenorg" />-->
+            <!--  <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>-->
+            <property name="hibernate.dialect" value="org.hibernatespatial.postgis.PostgisDialect"/>
+            <property name="hibernate.show_sql" value="true" />
+            <property name="hibernate.format_sql" value="true" />
+            <property name="hibernate.connection.username" value="postgres"/>
+            <property name="hibernate.connection.password" value="post"/>
+            <property name="hibernate.connection.url" value="jdbc:postgresql_postGIS://localhost:5432/Stachys01"/>
+            <property name="hibernate.connection.driver_class" value="org.postgis.DriverWrapper"/>
+            <!--   <property name="hibernate.connection.url" value="jdbc:postgresql://localhost:5433/pflanzenorg"/>
+            <property name="hibernate.connection.driver_class" value="org.postgresql.Driver"/>-->
+        </properties>
+  
+    </persistence-unit>
+</persistence>
