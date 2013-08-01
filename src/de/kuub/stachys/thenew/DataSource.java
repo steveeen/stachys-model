@@ -13,6 +13,7 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -20,6 +21,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
 /**
@@ -51,34 +53,41 @@ public class DataSource extends Syslog implements Serializable {
     @Id
     @Basic(optional = false)
     @Type(type = "uuid-custom")
-    @Column(name = "[dataSourceId]")
+    @Column(name = "[dataSourceId]", nullable = false, unique = true)
+    @GeneratedValue(generator = "system-uuid")
+    @GenericGenerator(name = "system-uuid", strategy = "uuid2")
     private UUID dataSourceId;
 
     @Basic(optional = false)
-    @Column(name = "srcTitle")
+    @Column(name = "[srcTitle]")
     private String srcTitle;
 
     @Basic(optional = false)
-    @Column(name = "year")
+    @Column(name = "[year]")
     private short year;
 
     @Basic(optional = false)
-    @Column(name = "type")
+    @Column(name = "[type]")
     private String type;
 
     @Basic(optional = false)
-    @Column(name = "place")
+    @Column(name = "[place]")
     private String place;
 
     @Basic(optional = false)
-    @Column(name = "published")
+    @Column(name = "[published]")
     private boolean published;
+
+    private Integer oldid;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "dataSource")
     private Collection<Authors> authorsCollection;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "dataSource")
     private Collection<DataSourceMedium> datasourceMediumCollection;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "dataSource")
+    private Collection<CountedSpeciesDataSource> countedSpeciesDataSourceCollection;
 
     public DataSource() {
     }
@@ -98,6 +107,41 @@ public class DataSource extends Syslog implements Serializable {
         this.setSyslogcreatedby(syslogcreatedby);
         this.setSysloglastChangedOn(sysloglastChangedOn);
         this.setSysloglastChangedBy(sysloglastChangedBy);
+    }
+
+    /**
+     * @param countedSpeciesDataSourceCollection the countedSpeciesDataSourceCollection to set
+     */
+    public void setCountedSpeciesDataSourceCollection(Collection<CountedSpeciesDataSource> countedSpeciesDataSourceCollection) {
+        this.countedSpeciesDataSourceCollection = countedSpeciesDataSourceCollection;
+    }
+
+    /**
+     * @return the countedSpeciesDataSourceCollection
+     */
+    public Collection<CountedSpeciesDataSource> getCountedSpeciesDataSourceCollection() {
+        return countedSpeciesDataSourceCollection;
+    }
+
+    /**
+     * @param oldid the oldid to set
+     */
+    public void setOldid(Integer oldid) {
+        this.oldid = oldid;
+    }
+
+    /**
+     * @return the oldid
+     */
+    public Integer getOldid() {
+        return oldid;
+    }
+
+    /**
+     * @return the published
+     */
+    public boolean isPublished() {
+        return published;
     }
 
     public UUID getDataSourceId() {
@@ -138,10 +182,6 @@ public class DataSource extends Syslog implements Serializable {
 
     public void setPlace(String place) {
         this.place = place;
-    }
-
-    public boolean getPublished() {
-        return published;
     }
 
     public void setPublished(boolean published) {

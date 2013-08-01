@@ -92,7 +92,7 @@ public class Person extends Syslog implements Serializable {
     private User userId;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "person")
-    private Collection<CountedSpeciesPerson> countedSpeciesPersonsCollection;
+    private Collection<Mapper> countedSpeciesPersonsCollection;
 
     public Person() {
     }
@@ -213,11 +213,11 @@ public class Person extends Syslog implements Serializable {
     }
 
     @XmlTransient
-    public Collection<CountedSpeciesPerson> getCountedSpeciesPersonsCollection() {
+    public Collection<Mapper> getCountedSpeciesPersonsCollection() {
         return countedSpeciesPersonsCollection;
     }
 
-    public void setCountedSpeciesPersonsCollection(Collection<CountedSpeciesPerson> countedSpeciesPersonsCollection) {
+    public void setCountedSpeciesPersonsCollection(Collection<Mapper> countedSpeciesPersonsCollection) {
         this.countedSpeciesPersonsCollection = countedSpeciesPersonsCollection;
     }
 

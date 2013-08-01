@@ -67,6 +67,8 @@ public class PublicationMedium extends Syslog implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "publicationMedium")
     private Collection<DataSourceMedium> datasourceMediumCollection;
 
+    private Integer oldid;
+
     public PublicationMedium() {
     }
 
@@ -79,6 +81,48 @@ public class PublicationMedium extends Syslog implements Serializable {
         this.pMediumTitle = pMediumTitle;
     }
 
+    /**
+     * @param oldid the oldid to set
+     */
+    public void setOldid(Integer oldid) {
+        this.oldid = oldid;
+    }
+
+    /**
+     * @return the oldid
+     */
+    public Integer getOldid() {
+        return oldid;
+    }
+
+    /**
+     * @param pMediumReference the pMediumReference to set
+     */
+    public void setpMediumReference(String pMediumReference) {
+        this.pMediumReference = pMediumReference;
+    }
+
+    /**
+     * @return the pMediumReference
+     */
+    public String getpMediumReference() {
+        return pMediumReference;
+    }
+
+    /**
+     * @param pMediumTitle the pMediumTitle to set
+     */
+    public void setpMediumTitle(String pMediumTitle) {
+        this.pMediumTitle = pMediumTitle;
+    }
+
+    /**
+     * @return the pMediumTitle
+     */
+    public String getpMediumTitle() {
+        return pMediumTitle;
+    }
+
     public UUID getPublicationMediumId() {
         return publicationMediumId;
     }
@@ -88,19 +132,19 @@ public class PublicationMedium extends Syslog implements Serializable {
     }
 
     public String getPMediumTitle() {
-        return pMediumTitle;
+        return getpMediumTitle();
     }
 
     public void setPMediumTitle(String pMediumTitle) {
-        this.pMediumTitle = pMediumTitle;
+        this.setpMediumTitle(pMediumTitle);
     }
 
     public String getPMediumReference() {
-        return pMediumReference;
+        return getpMediumReference();
     }
 
     public void setPMediumReference(String pMediumReference) {
-        this.pMediumReference = pMediumReference;
+        this.setpMediumReference(pMediumReference);
     }
 
     @XmlTransient

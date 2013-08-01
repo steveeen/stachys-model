@@ -6,11 +6,19 @@ package de.kuub.stachys;
 
 import de.kuub.stachys.model.old.Fundort;
 import de.kuub.stachys.model.old.Personen;
+import de.kuub.stachys.model.old.QuZeit;
+import de.kuub.stachys.model.old.Quelle;
 import de.kuub.stachys.model.old.Users;
 import de.kuub.stachys.model.old.Zaehldaten;
+import de.kuub.stachys.model.old.Zeitschrift;
+import de.kuub.stachys.thenew.Authors;
 import de.kuub.stachys.thenew.CountedSpecies;
-import de.kuub.stachys.thenew.CountedSpeciesPerson;
+import de.kuub.stachys.thenew.CountedSpeciesDataSource;
+import de.kuub.stachys.thenew.DataSource;
+import de.kuub.stachys.thenew.DataSourceMedium;
+import de.kuub.stachys.thenew.Mapper;
 import de.kuub.stachys.thenew.Person;
+import de.kuub.stachys.thenew.PublicationMedium;
 import de.kuub.stachys.thenew.SearchPlace;
 import de.kuub.stachys.thenew.Species;
 import de.kuub.utils.ExceptionHelper;
@@ -92,7 +100,62 @@ public class PersonMapper {
         return null;
     }
 
-    void TransferZDatas(List<Zaehldaten> zLi, Map<Integer, Person> pLi, Map<Integer, SearchPlace> foli, Map<Integer, Species> spli) {
+    Map<Integer, DataSource> TransferDaSoDatas(List<Quelle> quLi, Map<Integer, Person> pLi, Map<Integer, PublicationMedium> zeLi) {
+
+
+        try {
+            emr.getTransaction().begin();
+            Map<Integer, DataSource> dslis = new HashMap<>();
+            for (Quelle quell : quLi) {
+                DataSource bla = new DataSource();
+                bla.setPlace(quell.getOrt());
+                bla.setPublished(quell.getPublikation());
+                bla.setSrcTitle(quell.getTitel());
+                bla.setType(quell.getQuellart());
+                bla.setYear(quell.getJahr());
+                bla.setOldid(quell.getQuellId());
+                bla = JavaGIS.FillSysLog(bla);
+                emr.persist(bla);
+                Collection<Authors> auths = new ArrayList<>();
+                if (quell.getPersonenCollection() != null && !quell.getPersonenCollection().isEmpty()) {
+                    for (Personen author : quell.getPersonenCollection()) {
+                        Person ttt = pLi.get(author.getPersId());
+                        Authors auth2 = new Authors(bla.getDataSourceId(), ttt.getPersId());
+                        JavaGIS.FillSysLog(auth2);
+                        emr.persist(auth2);
+                        auths.add(auth2);
+                    }
+                }
+                bla.setAuthorsCollection(auths);
+                emr.merge(bla);
+                dslis.put(bla.getOldid(), bla);
+                Collection<DataSourceMedium> dsms = new ArrayList<>();
+                if (quell.getQuZeitCollection() != null && !quell.getQuZeitCollection().isEmpty()) {
+                    for (QuZeit zor : quell.getQuZeitCollection()) {
+                        PublicationMedium temp = zeLi.get(zor.getZeitschrift().getZeitschriftId());
+                        DataSourceMedium dsss = new DataSourceMedium(bla.getDataSourceId(), temp.getPublicationMediumId());
+                        dsss.setMediumValue(zor.getAusgabe());
+                        JavaGIS.FillSysLog(dsss);
+                        emr.persist(dsss);
+                        dsms.add(dsss);
+                    }
+                }
+                bla.setDatasourceMediumCollection(dsms);
+                emr.merge(bla);
+                dslis.put(bla.getOldid(), bla);
+            }
+            emr.getTransaction().commit();
+            emr.clear();
+            return dslis;
+        } catch (PersistenceException ex) {
+            ExceptionHelper.ParsePersistenceException(ex);
+            emr.getTransaction().rollback();
+            emr.clear();
+        }
+        return null;
+    }
+
+    void TransferZDatas(List<Zaehldaten> zLi, Map<Integer, Person> pLi, Map<Integer, SearchPlace> foli, Map<Integer, Species> spli, Map<Integer, DataSource> dsli) {
         try {
             emr.getTransaction().begin();
             for (Zaehldaten zdn : zLi) {
@@ -107,16 +170,26 @@ public class PersonMapper {
                 bla.setYearofRecord(zdn.getAufnahmejahr());
                 bla = JavaGIS.FillSysLog(bla);
                 emr.persist(bla);
-                Collection<CountedSpeciesPerson> plil = new ArrayList<>();
+                Collection<Mapper> plil = new ArrayList<>();
                 if (zdn.getPersonenCollection() != null && !zdn.getPersonenCollection().isEmpty()) {
                     for (Personen karts : zdn.getPersonenCollection()) {
                         Person ttt = pLi.get(karts.getPersId());
-                        CountedSpeciesPerson kartiers = new CountedSpeciesPerson(ttt.getPersId(), bla.getZdId());
+                        Mapper kartiers = new Mapper(ttt.getPersId(), bla.getZdId());
                         JavaGIS.FillSysLog(kartiers);
                         plil.add(kartiers);
                     }
                 }
                 bla.setCountedSpeciespersonsCollection(plil);
+                Collection<CountedSpeciesDataSource> csdsli = new ArrayList<>();
+                if (zdn.getQuelleCollection() != null && !zdn.getQuelleCollection().isEmpty()) {
+                    for (Quelle quelln : zdn.getQuelleCollection()) {
+                        DataSource ttt = dsli.get(quelln.getQuellId());
+                        CountedSpeciesDataSource csds = new CountedSpeciesDataSource(bla.getZdId(), ttt.getDataSourceId());
+                        JavaGIS.FillSysLog(csds);
+                        csdsli.add(csds);
+                    }
+                }
+                bla.setCountedSpeciesDataSourceCollection(csdsli);
                 emr.merge(bla);
             }
             emr.getTransaction().commit();
@@ -145,6 +218,31 @@ public class PersonMapper {
             emr.getTransaction().commit();
             emr.clear();
             return fol;
+
+        } catch (PersistenceException ex) {
+            ExceptionHelper.ParsePersistenceException(ex);
+            emr.getTransaction().rollback();
+            emr.clear();
+        }
+        return null;
+    }
+
+    Map<Integer, PublicationMedium> TransferPMediums(List<Zeitschrift> zeitLi) {
+        try {
+            Map<Integer, PublicationMedium> zeLi = new HashMap<>();
+            emr.getTransaction().begin();
+            for (Zeitschrift zeitschrift : zeitLi) {
+                PublicationMedium zeit = new PublicationMedium();
+                zeit.setPMediumTitle(zeitschrift.getTitel());
+                zeit.setPMediumReference("Journal");
+                JavaGIS.FillSysLog(zeit);
+                zeit.setOldid(zeitschrift.getZeitschriftId());
+                emr.persist(zeit);
+                zeLi.put(zeit.getOldid(), zeit);
+            }
+            emr.getTransaction().commit();
+            emr.clear();
+            return zeLi;
 
         } catch (PersistenceException ex) {
             ExceptionHelper.ParsePersistenceException(ex);

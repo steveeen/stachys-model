@@ -41,5 +41,5 @@ public class Person_ {
 
     public static volatile SingularAttribute<Person, User> userId;
 
-    public static volatile CollectionAttribute<Person, CountedSpeciesPerson> countedSpeciespersonsCollection;
+    public static volatile CollectionAttribute<Person, Mapper> countedSpeciespersonsCollection;
 }

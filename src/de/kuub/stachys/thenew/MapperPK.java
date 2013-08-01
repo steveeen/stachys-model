@@ -17,7 +17,7 @@ import org.hibernate.annotations.Type;
  * @author Bonke
  */
 @Embeddable
-public class CountedSpeciesPersonPK implements Serializable {
+public class MapperPK implements Serializable {
 
     @Basic(optional = false)
     @Type(type = "uuid-custom")
@@ -29,10 +29,10 @@ public class CountedSpeciesPersonPK implements Serializable {
     @Column(name = "[zd_id]", nullable = false, unique = true)
     private UUID zdId;
 
-    public CountedSpeciesPersonPK() {
+    public MapperPK() {
     }
 
-    public CountedSpeciesPersonPK(UUID persid, UUID zdId) {
+    public MapperPK(UUID persid, UUID zdId) {
         this.persid = persid;
         this.zdId = zdId;
     }
@@ -64,10 +64,10 @@ public class CountedSpeciesPersonPK implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof CountedSpeciesPersonPK)) {
+        if (!(object instanceof MapperPK)) {
             return false;
         }
-        CountedSpeciesPersonPK other = (CountedSpeciesPersonPK) object;
+        MapperPK other = (MapperPK) object;
         if ((this.persid == null && other.persid != null) || (this.persid != null && !this.persid.equals(
                 other.persid))) {
             return false;
@@ -81,6 +81,6 @@ public class CountedSpeciesPersonPK implements Serializable {
 
     @Override
     public String toString() {
-        return MessageFormat.format("de.kuub.stachys.thenew.CountedSpeciespersonsPK[ persid={0}, zdId={1} ]", persid, zdId);
+        return MessageFormat.format("de.kuub.stachys.thenew.MapperPK[ persid={0}, zdId={1} ]", persid, zdId);
     }
 }

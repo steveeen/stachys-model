@@ -105,7 +105,10 @@ public class CountedSpecies extends Syslog implements Serializable {
     private DataLicense license;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "countedSpecies")
-    private Collection<CountedSpeciesPerson> countedSpeciespersonsCollection;
+    private Collection<Mapper> countedSpeciespersonsCollection;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "countedSpecies")
+    private Collection<CountedSpeciesDataSource> countedSpeciesDataSourceCollection;
 
     public CountedSpecies() {
     }
@@ -123,6 +126,20 @@ public class CountedSpecies extends Syslog implements Serializable {
         this.yearofRecord = yearofRecord;
         this.countedUnits = countedUnits;
         this.estimation = estimation;
+    }
+
+    /**
+     * @param countedSpeciesDataSourceCollection the countedSpeciesDataSourceCollection to set
+     */
+    public void setCountedSpeciesDataSourceCollection(Collection<CountedSpeciesDataSource> countedSpeciesDataSourceCollection) {
+        this.countedSpeciesDataSourceCollection = countedSpeciesDataSourceCollection;
+    }
+
+    /**
+     * @return the countedSpeciesDataSourceCollection
+     */
+    public Collection<CountedSpeciesDataSource> getCountedSpeciesDataSourceCollection() {
+        return countedSpeciesDataSourceCollection;
     }
 
     /**
@@ -163,7 +180,7 @@ public class CountedSpecies extends Syslog implements Serializable {
         this.countedUnits = countedUnits;
     }
 
-    public boolean getEstimation() {
+    public boolean isEstimation() {
         return estimation;
     }
 
@@ -220,11 +237,11 @@ public class CountedSpecies extends Syslog implements Serializable {
     }
 
     @XmlTransient
-    public Collection<CountedSpeciesPerson> getCountedSpeciespersonsCollection() {
+    public Collection<Mapper> getCountedSpeciespersonsCollection() {
         return countedSpeciespersonsCollection;
     }
 
-    public void setCountedSpeciespersonsCollection(Collection<CountedSpeciesPerson> countedSpeciespersonsCollection) {
+    public void setCountedSpeciespersonsCollection(Collection<Mapper> countedSpeciespersonsCollection) {
         this.countedSpeciespersonsCollection = countedSpeciespersonsCollection;
     }
 
