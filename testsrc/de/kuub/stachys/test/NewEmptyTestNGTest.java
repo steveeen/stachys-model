@@ -1,6 +1,5 @@
 package de.kuub.stachys.test;
 
-
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
