@@ -61,7 +61,7 @@ public class PersonMapper {
                     bla.setOlduid(todo.getUser().getUserId());
                     bla.setUserId(uli.get(todo.getUser().getUserId()));
                 }
-                bla = JavaGIS.FillSysLog(bla);
+                bla = JavaGIS.fillSysLog(bla);
                 emr.persist(bla);
                 pLi.put(bla.getOldpid(), bla);
             }
@@ -86,7 +86,7 @@ public class PersonMapper {
                 us.setSalt(todo.getSalt());
                 us.setTrusted(todo.getTrusted());
                 us.setUsername(todo.getName());
-                us = JavaGIS.FillSysLog(us);
+                us = JavaGIS.fillSysLog(us);
                 emr.persist(us);
                 usrl.put(us.getOldid(), us);
             }
@@ -114,14 +114,14 @@ public class PersonMapper {
                 bla.setType(quell.getQuellart());
                 bla.setYear(quell.getJahr());
                 bla.setOldid(quell.getQuellId());
-                bla = JavaGIS.FillSysLog(bla);
+                bla = JavaGIS.fillSysLog(bla);
                 emr.persist(bla);
                 Collection<Authors> auths = new ArrayList<>();
                 if (quell.getPersonenCollection() != null && !quell.getPersonenCollection().isEmpty()) {
                     for (Personen author : quell.getPersonenCollection()) {
                         Person ttt = pLi.get(author.getPersId());
                         Authors auth2 = new Authors(bla.getDataSourceId(), ttt.getPersId());
-                        JavaGIS.FillSysLog(auth2);
+                        JavaGIS.fillSysLog(auth2);
                         emr.persist(auth2);
                         auths.add(auth2);
                     }
@@ -135,7 +135,7 @@ public class PersonMapper {
                         PublicationMedium temp = zeLi.get(zor.getZeitschrift().getZeitschriftId());
                         DataSourceMedium dsss = new DataSourceMedium(bla.getDataSourceId(), temp.getPublicationMediumId());
                         dsss.setMediumValue(zor.getAusgabe());
-                        JavaGIS.FillSysLog(dsss);
+                        JavaGIS.fillSysLog(dsss);
                         emr.persist(dsss);
                         dsms.add(dsss);
                     }
@@ -168,14 +168,14 @@ public class PersonMapper {
                 bla.setCountedUnits(zdn.getAnzahlabs());
                 bla.setSpeciesId(spli.get(zdn.getArtId().getArtId()));
                 bla.setYearofRecord(zdn.getAufnahmejahr());
-                bla = JavaGIS.FillSysLog(bla);
+                bla = JavaGIS.fillSysLog(bla);
                 emr.persist(bla);
                 Collection<Mapper> plil = new ArrayList<>();
                 if (zdn.getPersonenCollection() != null && !zdn.getPersonenCollection().isEmpty()) {
                     for (Personen karts : zdn.getPersonenCollection()) {
                         Person ttt = pLi.get(karts.getPersId());
                         Mapper kartiers = new Mapper(ttt.getPersId(), bla.getZdId());
-                        JavaGIS.FillSysLog(kartiers);
+                        JavaGIS.fillSysLog(kartiers);
                         plil.add(kartiers);
                     }
                 }
@@ -185,7 +185,7 @@ public class PersonMapper {
                     for (Quelle quelln : zdn.getQuelleCollection()) {
                         DataSource ttt = dsli.get(quelln.getQuellId());
                         CountedSpeciesDataSource csds = new CountedSpeciesDataSource(bla.getZdId(), ttt.getDataSourceId());
-                        JavaGIS.FillSysLog(csds);
+                        JavaGIS.fillSysLog(csds);
                         csdsli.add(csds);
                     }
                 }
@@ -210,7 +210,7 @@ public class PersonMapper {
                 spn.setRaster((int) fodn.getRaster());
                 spn.setOldid(fodn.getFoId());
                 spn.setArea(fodn.getArea());
-                JavaGIS.FillSysLog(spn);
+                JavaGIS.fillSysLog(spn);
                 emr.persist(spn);
                 fol.put(spn.getOldid(), spn);
 
@@ -235,7 +235,7 @@ public class PersonMapper {
                 PublicationMedium zeit = new PublicationMedium();
                 zeit.setPMediumTitle(zeitschrift.getTitel());
                 zeit.setPMediumReference("Journal");
-                JavaGIS.FillSysLog(zeit);
+                JavaGIS.fillSysLog(zeit);
                 zeit.setOldid(zeitschrift.getZeitschriftId());
                 emr.persist(zeit);
                 zeLi.put(zeit.getOldid(), zeit);

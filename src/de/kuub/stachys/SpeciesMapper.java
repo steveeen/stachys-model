@@ -31,7 +31,7 @@ import javax.persistence.Query;
  */
 public class SpeciesMapper {
 
-    private static EntityManager emr;
+    private EntityManager emr;
 
     public SpeciesMapper(EntityManager em) {
         emr = em;
@@ -102,7 +102,7 @@ public class SpeciesMapper {
         // Read the existing entries and write to console
         Species bla = new Species();
         bla.setOldid(oldid);
-        bla = JavaGIS.FillSysLog(bla);
+        bla = JavaGIS.fillSysLog(bla);
         return bla;
     }
 
@@ -114,7 +114,7 @@ public class SpeciesMapper {
         tmp.setSubspecies(species.GetSubSpezies());
 
         tmp.setSpeciesnameorginal(species.getSciencename());
-        tmp = JavaGIS.FillSysLog(tmp);
+        tmp = JavaGIS.fillSysLog(tmp);
         tmp.setSpeciesRef(speciesref);
         return tmp;
     }
@@ -122,7 +122,7 @@ public class SpeciesMapper {
     protected static SpeciesName CreateSpeciesName(Species speciesref, Taxonomisch species) {
         SpeciesName tmp = new SpeciesName();
         tmp.setSpeciesname(species.getDeutschername());
-        tmp = JavaGIS.FillSysLog(tmp);
+        tmp = JavaGIS.fillSysLog(tmp);
         tmp.setSpecies(speciesref);
         return tmp;
     }
@@ -159,7 +159,7 @@ public class SpeciesMapper {
             Biotop tmp = btps.get(bp.getBiotopId());
             System.out.println(tmp.getBiotoptyp() + "::" + bp.getBiotoptyp());
             SpeciesBiotop spbp = new SpeciesBiotop(tmp.getBiotopId(), speciesId);
-            spbp = JavaGIS.FillSysLog(spbp);
+            spbp = JavaGIS.fillSysLog(spbp);
             spBios.add(spbp);
         }
         return spBios;
@@ -171,13 +171,13 @@ public class SpeciesMapper {
         UUID rluid = rlSet.get("BRD").getRedListId();
         if (todo.getRlBrd() != null && !todo.getRlBrd().isEmpty()) {
             RedlistSpecies tmp = new RedlistSpecies(speciesId, rluid, todo.getRlBrd());
-            tmp = JavaGIS.FillSysLog(tmp);
+            tmp = JavaGIS.fillSysLog(tmp);
             rpSp.add(tmp);
         }
         rluid = rlSet.get("NRW").getRedListId();
         if (todo.getRlNrw() != null && !todo.getRlNrw().isEmpty()) {
             RedlistSpecies tmp = new RedlistSpecies(speciesId, rluid, todo.getRlNrw());
-            tmp = JavaGIS.FillSysLog(tmp);
+            tmp = JavaGIS.fillSysLog(tmp);
             rpSp.add(tmp);
         }
         return rpSp;
@@ -190,10 +190,10 @@ public class SpeciesMapper {
             newPic.setMimeType("image/jpeg");
             newPic.setPicture(todo.getArtbild());
             newPic.setOldid(todo.getArtId());
-            newPic = JavaGIS.FillSysLog(newPic);
+            newPic = JavaGIS.fillSysLog(newPic);
             em2.persist(newPic);
             SpeciesPicture newspic = new SpeciesPicture(bla.getSpeciesId(), newPic.getPictureId());
-            newspic = JavaGIS.FillSysLog(newspic);
+            newspic = JavaGIS.fillSysLog(newspic);
             sppics.add(newspic);
 
             bla.setSpeciesPictureCollection(sppics);

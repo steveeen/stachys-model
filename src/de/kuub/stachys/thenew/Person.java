@@ -85,7 +85,7 @@ public class Person extends Syslog implements Serializable {
     private Integer olduid;
 
     @OneToMany(mappedBy = "copyrightPersonId")
-    private Collection<Pictures> PictureCollection;
+    private Collection<Pictures> pictureCollection;
 
     @JoinColumn(name = "[userid]", referencedColumnName = "[userid]")
     @ManyToOne
@@ -169,11 +169,11 @@ public class Person extends Syslog implements Serializable {
 
     @XmlTransient
     public Collection<Pictures> getSpeciesPictureCollection() {
-        return PictureCollection;
+        return pictureCollection;
     }
 
     public void setPictureCollection(Collection<Pictures> PictureCollection) {
-        this.PictureCollection = PictureCollection;
+        this.pictureCollection = PictureCollection;
     }
 
     public User getUserId() {
